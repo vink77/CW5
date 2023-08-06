@@ -1,4 +1,5 @@
 from src.api import HHApi, SJApi
+
 #from save_file import Saver
 #from load_file import Loader
 from src.functions import Vacancy
@@ -14,6 +15,8 @@ import os,requests
 # 6041 Северсталь
 # 4233 X5 Group
 # 2180 Ozon
+#"VK": 15478,
+#    "АйТеко": 115,
 
 class Job():
     """Класс взаимодействия с пользователем"""
