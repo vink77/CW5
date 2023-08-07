@@ -5,6 +5,7 @@ from src.api import HHApi, SJApi
 from src.functions import Vacancy
 import os,requests
 # 1740 Яндекс
+# 40565 Google Inc.
 # 3529 Сбер
 # 15478 VK
 # 78638 Тинькофф
@@ -15,8 +16,9 @@ import os,requests
 # 6041 Северсталь
 # 4233 X5 Group
 # 2180 Ozon
-#"VK": 15478,
-#    "АйТеко": 115,
+# 115 АйТеко
+# 566 OCS Distribution
+# 2748 Ростелеком
 
 class Job():
     """Класс взаимодействия с пользователем"""
