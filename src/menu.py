@@ -1,6 +1,6 @@
-from src.api import HHApi, SJApi
+from src.api import HHApi
 
-#from save_file import Saver
+from src.create_db import Saver
 #from load_file import Loader
 from src.functions import Vacancy
 import os,requests
@@ -24,26 +24,23 @@ class Job():
     """Класс взаимодействия с пользователем"""
     SALARY_FROM = 100000  # Константы зарплат для фильтров
     SALARY_TO = 150000  # Константы зарплат для фильтров
+    EMPLOYERS = [2748, 40565, 3529, 15478, 2180, 78638, 740, 3388, 3388, 23186, 3776, 6041, 4233, 115, 566, 2748, 1740]
     hh_api = HHApi()
-    sj_api = SJApi()
+    #sj_api = SJApi()
     file_name = 'my_name'
     result_all = []
     while True:
         print(f"\n{' ' * 8}ОСНОВНОЕ МЕНЮ\n\
-1. найти и вывести список вакансий с ресурсов HH.ru и SuperJob.ru\n\
-2. МЕНЮ работыс  файлом json\n\
+1. найти и вывести список вакансий с ресурсов HH.ru \n\
+2. МЕНЮ работы с Базой Данных HH_BASE\n\
 3. МЕНЮ работы с файлом xlsx\n\
 4. МЕНЮ фильтров \n\
 5. выйти")
         choiсe = input("Ваш выбор - ")
-        choiсe = '1'
         if choiсe == '1':
-                        # if response.status_code == 200:
             result_all = []
-            #platforms = [HHApi(), SJApi()]
             platforms = [HHApi()]
-
-                        #search_query = input("Введите должность для поиска: ")
+            #search_query = input("Введите должность для поиска: ")
             search_query = ''
             city = 1
             #while city not in ["1", "2", "3", "4"]:
@@ -51,29 +48,28 @@ class Job():
             #        input("Выберите город поиска /1 - Москва, 2-Санкт-Петербург, 3- Кемерово, 4- Новосибирск/ : "))
             #city = int(city)
             for item in platforms:
-                result = item.search(search_query, city)
+                result = item.search(EMPLOYERS)
                 result_all.extend(result)
             vacancy = Vacancy(result_all)
             vacancy.output_vacancies()
         if choiсe == "2":
             while True:
-                print(f"\n{' ' * 8} МЕНЮ работы с файлом {file_name}.json\n\
-1. сохранить вакансии в файл json\n\
-2. удалить вакансию из файла json по id\n\
-3. показать вакансии из файла json\n\
-4. задать имя файла json\n\
-5. удалить файл json\n\
+                print(f"\n{' ' * 8} МЕНЮ работы с ТАБЛИЦЕЙ  {file_name}  БАЗЫ ДАННЫХ\n\
+1. сохранить вакансии в базу данных\n\
+2. показать вакансии из таблицы БАЗЫ ДАННЫХ\n\
+3. удалить вакансию из файла json по id\n\
+4. задать имя таблицы БАЗЫ ДАННЫХ\n\
+5. удалить данные из БАЗЫ ДАННЫХ\n\
 6. выход в основное меню")
                 choiсe_file = input("     Ваш выбор: ")
                 if choiсe_file == "1":
                     write = Saver(result_all, file_name)
-                    write.write_vacancies_json()
-                    if os.path.isfile(f'./{file_name}.json'):
-                        print(f"файл {file_name}.json сохранен!")
-                if choiсe_file == "2":  # удалить вакансию из файла json
+                    write.createdb()
+
+                if choiсe_file == "2":  # показать вакансии из БАЗЫ ДАННЫХ
                     id = input("id для удаления ")
                     write.delete_vacancy_json(id)
-                if choiсe_file == "3":  # показать вакансии из файла json
+                if choiсe_file == "3":   # удалить вакансию из файла json
                     if os.path.isfile(f'./{file_name}.json'):
                         result_all = Loader(file_name)
                         Vacancy(result_all.get_vacancies_json()).output_vacancies()
