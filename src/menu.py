@@ -1,9 +1,9 @@
 from src.api import HHApi
-
 from src.create_db import Saver
-#from load_file import Loader
+from src.db import DBManager
 from src.functions import Vacancy
-import os,requests
+import os
+
 # 1740 Яндекс
 # 40565 Google Inc.
 # 3529 Сбер
@@ -24,9 +24,8 @@ class Job():
     """Класс взаимодействия с пользователем"""
     SALARY_FROM = 100000  # Константы зарплат для фильтров
     SALARY_TO = 150000  # Константы зарплат для фильтров
-    EMPLOYERS = [2748, 40565, 3529, 15478, 2180, 78638, 740, 3388, 3388, 23186, 3776, 6041, 4233, 115, 566, 2748, 1740]
+    EMPLOYERS = [1235466,2748, 40565, 3529, 15478, 2180, 78638, 740, 3388, 3388, 23186, 3776, 6041, 4233, 115, 566, 2748, 1740]
     hh_api = HHApi()
-    #sj_api = SJApi()
     file_name = 'my_name'
     result_all = []
     while True:
@@ -67,14 +66,17 @@ class Job():
                     write.createdb()
 
                 if choiсe_file == "2":  # показать вакансии из БАЗЫ ДАННЫХ
-                    id = input("id для удаления ")
-                    write.delete_vacancy_json(id)
+                    write = DBManager(file_name)
+                    write.get_companies_and_vacancies_count()
+
+
+
+
                 if choiсe_file == "3":   # удалить вакансию из файла json
-                    if os.path.isfile(f'./{file_name}.json'):
-                        result_all = Loader(file_name)
-                        Vacancy(result_all.get_vacancies_json()).output_vacancies()
-                    else:
-                        print("Такой файл не найден!")
+                    write = DBManager(file_name)
+                    write.delete_table()
+
+
                 if choiсe_file == "4":  # задать имя файла json
                     file_name = input("Введите имя файла без расширения :")
                 if choiсe_file == "5":  # удалить файл json

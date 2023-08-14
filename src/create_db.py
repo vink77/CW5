@@ -24,36 +24,38 @@ class Saver:
         try:
             with self.conn:
                 with self.conn.cursor() as cur:
-#                   try:
-#                       cur.execute(create_table_query)
-#                   except НужноеИсключение:
-#                       print("таблица уже существует")
-                    check = cur.execute("SELECT EXISTS(SELECT relname from pg_class where relname = 'my_name' and relkind='r');")
-                    print(check, cur.execute(f"SELECT EXISTS(SELECT relname from pg_class where relname = '{self.filename_db}' and relkind='r');"))
-                    if check:
-
+                    cur.execute(f"SELECT EXISTS(SELECT relname from pg_class where relname = '{self.filename_db}' and relkind='r');")
+                    rows = cur.fetchall()
+                    rows = bool(rows[0][0])
+                    if not rows:
                         cur.execute(f"CREATE \
                         TABLE {self.filename_db} (id_vacancies integer,\
                         appointment varchar,\
                         city varchar(38),\
                         company_name varchar(40),\
+                        company_url varchar(40),\
                         description varchar,\
                         salary_from integer,\
                         salary_to integer);")
 
-
                     cur.execute(f"TRUNCATE TABLE {self.filename_db} RESTART IDENTITY;")
                     for item in self.vacancies:
-                        cur.execute(f"INSERT INTO {self.filename_db} VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                                    [item["id"], item["name"], item["town"],item["firm_name"], item["description"], item["salary_from"],item["salary_to"]])
+                        cur.execute(f"INSERT INTO {self.filename_db} VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+                                    [item["id"], item["name"], item["town"],item["firm_name"], item["url"], item["description"], item["salary_from"],item["salary_to"]])
 
         finally:
             self.conn.close()
 
 
+    def delete_table(self):
+        """Метод для удаления таблицы из БД"""
+        try:
+            with self.conn:
+                with self.conn.cursor() as cur:
+                    cur.execute(f"DROP TABLE {self.filename_db};")
 
-
-
+        finally:
+            self.conn.close()
 
 
 

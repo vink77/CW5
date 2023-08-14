@@ -5,7 +5,7 @@ class DBManager():
         self.filename_db = filename
         self.conn = psycopg2.connect(
             host='localhost',
-            database='HH_vacancies',
+            database='HH_BASE',
             user='postgres',
             password='9877'
         )
@@ -15,11 +15,14 @@ class DBManager():
         try:
             with self.conn:
                 with self.conn.cursor() as cur:
+
                     cur.execute(f"SELECT company_name, COUNT(company_name) as count_company\
                                 FROM {self.filename_db}\
                                 GROUP BY company_name\
                                 ORDER BY COUNT(company_name) DESC;")
                     rows = cur.fetchall()
+                    for row in rows:
+                        print(f'В компании "{row[0]}" {"."*(30-len(row[0]))} {row[1]} вакансий')
                     return rows
         finally:
             self.conn.close()
