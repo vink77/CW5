@@ -12,45 +12,37 @@ class DBManager():
 
     def get_companies_and_vacancies_count(self):
         '''Получает список всех компаний и количество  вакансий у  каждой компании.'''
-        try:
-            with self.conn:
-                with self.conn.cursor() as cur:
-
-                    cur.execute(f"SELECT company_name, COUNT(company_name) as count_company\
-                                FROM {self.filename_db}\
-                                GROUP BY company_name\
-                                ORDER BY COUNT(company_name) DESC;")
-                    rows = cur.fetchall()
-                    return rows
-        finally:
-            self.conn.close()
-
+        command=  f"SELECT company_name, COUNT(company_name) as count_company FROM {self.filename_db} GROUP BY company_name ORDER BY COUNT(company_name) DESC;"
+        DBManager.get_command(self, command)
 
     def get_all_vacancies(self):
         '''получает список всех вакансий с указанием названия компании, названия вакансии и зарплаты и ссылки на вакансию.'''
-        try:
-            with self.conn:
-                with self.conn.cursor() as cur:
-                    cur.execute(f"SELECT *\
-                                FROM {self.filename_db}\
-                                ;")
-                    rows = cur.fetchall()
-                    return rows
-        finally:
-            self.conn.close()
+        command=  f"SELECT * FROM {self.filename_db};"
+        DBManager.get_command(self, command)
 
     def get_avg_salary(self):
         '''получает среднюю зарплату по вакансиям.'''
-        pass
+        command = f"SELECT * FROM {self.filename_db};"
+        DBManager.get_command(self, command)
     def get_vacancies_with_higher_salary(self):
         '''получает список всех вакансий, у которых зарплата выше средней по всем вакансиям.'''
-        pass
-    def get_vacancies_with_keyword(self):
+        command = f"SELECT * FROM {self.filename_db};"
+        DBManager.get_command(self, command)
+    def get_vacancies_with_keyword(self, keyword):
         '''получает список всех вакансий, в названии которых содержатся переданные в метод слова, например “python”.'''
-        pass
+        command = f"SELECT * FROM {self.filename_db} WHERE appointment LIKE '%{keyword}%';"
+        DBManager.get_command(self, command)
 
 
-    def output_db(self,rows):
-        for row in rows:
-            print(row)
-            #print(f'В компании "{row[0]}" {"." * (30 - len(row[0]))} {row[1]} вакансий')
+    def get_command(self, command):
+        '''Выводит в консоль результат полученной в метод SQL-комманды.'''
+        try:
+            with self.conn:
+                with self.conn.cursor() as cur:
+                    cur.execute(command)
+                    rows = cur.fetchall()
+                    for row in rows:
+                        print(row)
+                    return rows
+        finally:
+            self.conn.close()

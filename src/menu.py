@@ -58,8 +58,12 @@ class Job():
 2. показать вакансии из таблицы БАЗЫ ДАННЫХ\n\
 3. Получает список всех компаний и количество вакансий у каждой компании.\n\
 4. задать имя таблицы БАЗЫ ДАННЫХ\n\
-5. удалить данные из БАЗЫ ДАННЫХ\n\
-6. выход в основное меню")
+5. получает среднюю зарплату по вакансиям\n\
+6. получает среднюю зарплату по вакансиям\n\
+7. получает среднюю зарплату по вакансиям\n\
+8. получает среднюю зарплату по вакансиям\n\
+9. задать имя таблицы БАЗЫ ДАННЫХ\n\
+0. выход в основное меню\n")
                 choiсe_file = input("     Ваш выбор: ")
                 if choiсe_file == "1":  #сохранить вакансии в базу данных
                     write = Saver(result_all, file_name)
@@ -67,13 +71,11 @@ class Job():
 
                 if choiсe_file == "2":  #Получает список всех вакансий с указанием названия компании, названия вакансии и зарплаты и ссылки на вакансию.
                     write = DBManager(file_name)
-                    r = write.get_all_vacancies()
-                    DBManager.output_db(file_name,r)
+                    write.get_all_vacancies()
 
                 if choiсe_file == "3":   #Получает список всех компаний и количество вакансий у каждой компании.
                     write = DBManager(file_name)
-                    r = write.get_companies_and_vacancies_count()
-                    DBManager.output_db(file_name, r)
+                    write.get_companies_and_vacancies_count()
 
                 if choiсe_file == "4":
                     pass
@@ -82,15 +84,16 @@ class Job():
                 if choiсe_file == "6":    #получает список всех вакансий, у которых зарплата выше средней по всем вакансиям
                     pass
                 if choiсe_file == "7":    #Получает список всех вакансий, в названии которых содержатся переданные в метод слова, например “python”
-                    pass
+                    keyword = input ('Введите ключевое слово для поиска: ')
+                    write = DBManager(file_name)
+                    write.get_vacancies_with_keyword(keyword)
                 if choiсe_file == "8":   # удалить таблицу
-                    write = Saver(file_name)
-                    write.delete_table()
+                    pass
 
                 if choiсe_file == "9":  # задать имя таблицы
                     file_name = input("Введите имя файла без расширения :")
 
-                if choiсe_file == "0":
+                if choiсe_file == "0":   #выход в основное меню
                     break
         if choiсe == "3":
             while True:
