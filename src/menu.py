@@ -56,36 +56,41 @@ class Job():
                 print(f"\n{' ' * 8} МЕНЮ работы с ТАБЛИЦЕЙ  {file_name}  БАЗЫ ДАННЫХ\n\
 1. сохранить вакансии в базу данных\n\
 2. показать вакансии из таблицы БАЗЫ ДАННЫХ\n\
-3. удалить вакансию из файла json по id\n\
+3. Получает список всех компаний и количество вакансий у каждой компании.\n\
 4. задать имя таблицы БАЗЫ ДАННЫХ\n\
 5. удалить данные из БАЗЫ ДАННЫХ\n\
 6. выход в основное меню")
                 choiсe_file = input("     Ваш выбор: ")
-                if choiсe_file == "1":
+                if choiсe_file == "1":  #сохранить вакансии в базу данных
                     write = Saver(result_all, file_name)
                     write.createdb()
 
-                if choiсe_file == "2":  # показать вакансии из БАЗЫ ДАННЫХ
+                if choiсe_file == "2":  #Получает список всех вакансий с указанием названия компании, названия вакансии и зарплаты и ссылки на вакансию.
                     write = DBManager(file_name)
-                    write.get_companies_and_vacancies_count()
+                    r = write.get_all_vacancies()
+                    DBManager.output_db(file_name,r)
 
-
-
-
-                if choiсe_file == "3":   # удалить вакансию из файла json
+                if choiсe_file == "3":   #Получает список всех компаний и количество вакансий у каждой компании.
                     write = DBManager(file_name)
+                    r = write.get_companies_and_vacancies_count()
+                    DBManager.output_db(file_name, r)
+
+                if choiсe_file == "4":
+                    pass
+                if choiсe_file == "5":    #получает среднюю зарплату по вакансиям.
+                    pass
+                if choiсe_file == "6":    #получает список всех вакансий, у которых зарплата выше средней по всем вакансиям
+                    pass
+                if choiсe_file == "7":    #Получает список всех вакансий, в названии которых содержатся переданные в метод слова, например “python”
+                    pass
+                if choiсe_file == "8":   # удалить таблицу
+                    write = Saver(file_name)
                     write.delete_table()
 
-
-                if choiсe_file == "4":  # задать имя файла json
+                if choiсe_file == "9":  # задать имя таблицы
                     file_name = input("Введите имя файла без расширения :")
-                if choiсe_file == "5":  # удалить файл json
-                    if os.path.isfile(f'./{file_name}.json'):
-                        os.remove(f'./{file_name}.json')
-                        print(f"файл {file_name}.json удалён ")
-                    else:
-                        print("Такой файл не найден!")
-                if choiсe_file == "6":
+
+                if choiсe_file == "0":
                     break
         if choiсe == "3":
             while True:

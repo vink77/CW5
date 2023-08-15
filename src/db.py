@@ -21,8 +21,6 @@ class DBManager():
                                 GROUP BY company_name\
                                 ORDER BY COUNT(company_name) DESC;")
                     rows = cur.fetchall()
-                    for row in rows:
-                        print(f'В компании "{row[0]}" {"."*(30-len(row[0]))} {row[1]} вакансий')
                     return rows
         finally:
             self.conn.close()
@@ -30,7 +28,16 @@ class DBManager():
 
     def get_all_vacancies(self):
         '''получает список всех вакансий с указанием названия компании, названия вакансии и зарплаты и ссылки на вакансию.'''
-        pass
+        try:
+            with self.conn:
+                with self.conn.cursor() as cur:
+                    cur.execute(f"SELECT *\
+                                FROM {self.filename_db}\
+                                ;")
+                    rows = cur.fetchall()
+                    return rows
+        finally:
+            self.conn.close()
 
     def get_avg_salary(self):
         '''получает среднюю зарплату по вакансиям.'''
@@ -41,3 +48,9 @@ class DBManager():
     def get_vacancies_with_keyword(self):
         '''получает список всех вакансий, в названии которых содержатся переданные в метод слова, например “python”.'''
         pass
+
+
+    def output_db(self,rows):
+        for row in rows:
+            print(row)
+            #print(f'В компании "{row[0]}" {"." * (30 - len(row[0]))} {row[1]} вакансий')
