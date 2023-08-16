@@ -16,22 +16,48 @@ class DBManager():
         DBManager.get_command(self, command)
 
     def get_all_vacancies(self):
-        '''получает список всех вакансий с указанием названия компании, названия вакансии и зарплаты и ссылки на вакансию.'''
+        '''Получает список всех вакансий с указанием названия компании, названия вакансии и зарплаты и ссылки на вакансию.'''
         command=  f"SELECT * FROM {self.filename_db};"
         DBManager.get_command(self, command)
 
     def get_avg_salary(self):
-        '''получает среднюю зарплату по вакансиям.'''
-        command = f"SELECT * FROM {self.filename_db};"
+        '''Получает среднюю зарплату по вакансиям.'''
+        command = f"SELECT FLOOR(AVG(ABS(salary_to - salary_from))) FROM {self.filename_db} WHERE (salary_to - salary_from)<>0;"
         DBManager.get_command(self, command)
+
     def get_vacancies_with_higher_salary(self):
-        '''получает список всех вакансий, у которых зарплата выше средней по всем вакансиям.'''
-        command = f"SELECT * FROM {self.filename_db};"
+        '''Получает список всех вакансий, у которых зарплата выше средней по всем вакансиям.'''
+        command = f"SELECT * FROM {self.filename_db} \
+                    WHERE ABS(salary_to - salary_from)>(SELECT FLOOR(AVG(ABS(salary_to - salary_from))) AS avg_salary \
+                    FROM my_name WHERE (salary_to - salary_from)<>0);"
         DBManager.get_command(self, command)
+
     def get_vacancies_with_keyword(self, keyword):
-        '''получает список всех вакансий, в названии которых содержатся переданные в метод слова, например “python”.'''
+        '''Получает список всех вакансий, в названии которых содержатся переданные в метод слова, например “python”.'''
         command = f"SELECT * FROM {self.filename_db} WHERE appointment LIKE '%{keyword}%';"
         DBManager.get_command(self, command)
+
+    def delete_table(self):
+        """Метод для удаления таблицы из БД"""
+        command = f"DROP TABLE {self.filename_db};"
+        try:
+            with self.conn:
+                with self.conn.cursor() as cur:
+                    cur.execute(command)
+            print(f"Таблица {self.filename_db} удалена")
+        except ValueError:
+            print("Error")
+        finally:
+            self.conn.close()
+    def clear_table(self):
+        """Метод для удаления данных из таблицы"""
+        command = f"TRUNCATE TABLE {self.filename_db} RESTART IDENTITY;"
+        try:
+            with self.conn:
+                with self.conn.cursor() as cur:
+                    cur.execute(command)
+        finally:
+            self.conn.close()
 
 
     def get_command(self, command):
@@ -39,10 +65,18 @@ class DBManager():
         try:
             with self.conn:
                 with self.conn.cursor() as cur:
-                    cur.execute(command)
+                    cur.execute(
+                        f"SELECT EXISTS(SELECT relname from pg_class where relname = '{self.filename_db}' and relkind='r');")
                     rows = cur.fetchall()
-                    for row in rows:
-                        print(row)
+                    rows = bool(rows[0][0])
+                    if rows:
+                        cur.execute(command)
+                        rows = cur.fetchall()
+                        for row in rows:
+                            print(str(row))
+                        print(f'\nКоличество результатов - {len((rows))}\n')
+                    else:
+                        print('Таблица еще не создана')
                     return rows
         finally:
             self.conn.close()

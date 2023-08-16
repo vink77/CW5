@@ -3,9 +3,11 @@ import requests
 
 
 class API(ABC):
+
     def __init__(self, url, num_vacancies=100):
         self.url = url
         self.num_vacancies = num_vacancies
+
 
     @abstractmethod
     def search(self, request_job):
@@ -36,6 +38,7 @@ class HHApi(API):
     def __init__(self, url='https://api.hh.ru/vacancies'):
         self.url = url
         super().__init__(url)
+
     def get_vacancies(self, EMPLOYERS, page = 1):
 
         """метод поиска вакансий с платформы HH"""
@@ -49,7 +52,7 @@ class HHApi(API):
     def search(self, EMPLOYERS, page = 1):
         result = []
         salary_from = salary_to = 0
-        for page in range(2):
+        for page in range(5): #количество вакансий
             response = self.get_vacancies(EMPLOYERS,page)
             for item in response['items']:
                 salary = item.get('salary', {})

@@ -3,7 +3,7 @@ import pandas as pd
 import psycopg2
 
 class Saver:
-    """Класс для сохранения информации о вакансиях в JSON и XLS -файл."""
+    """Класс для создания и заполнения таблиц."""
 
     def __init__(self, vacancies=[], filename='my_name'):
         self.filename_json = f"./{filename}.json"
@@ -42,20 +42,12 @@ class Saver:
                     for item in self.vacancies:
                         cur.execute(f"INSERT INTO {self.filename_db} VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
                                     [item["id"], item["name"], item["town"],item["firm_name"], item["url"], item["description"], item["salary_from"],item["salary_to"]])
-
+                    print('\nДанные сохранены в таблицу  {self.filename_db}\n')
         finally:
             self.conn.close()
 
 
-    def delete_table(self):
-        """Метод для удаления таблицы из БД"""
-        try:
-            with self.conn:
-                with self.conn.cursor() as cur:
-                    cur.execute(f"DROP TABLE {self.filename_db};")
 
-        finally:
-            self.conn.close()
 
 
 

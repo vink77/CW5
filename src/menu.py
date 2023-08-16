@@ -2,6 +2,7 @@ from src.api import HHApi
 from src.create_db import Saver
 from src.db import DBManager
 from src.functions import Vacancy
+from src.load_file import Loader
 import os
 
 # 1740 Яндекс
@@ -57,44 +58,45 @@ class Job():
 1. сохранить вакансии в базу данных\n\
 2. показать вакансии из таблицы БАЗЫ ДАННЫХ\n\
 3. Получает список всех компаний и количество вакансий у каждой компании.\n\
-4. задать имя таблицы БАЗЫ ДАННЫХ\n\
+4. Получает список всех вакансий, в названии которых содержится заданное слова\n\
 5. получает среднюю зарплату по вакансиям\n\
-6. получает среднюю зарплату по вакансиям\n\
-7. получает среднюю зарплату по вакансиям\n\
-8. получает среднюю зарплату по вакансиям\n\
+6. получает список всех вакансий, у которых зарплата выше средней по всем вакансиям\n\
+7. удалить таблицу\n\
+8. удалить данные из таблицы\n\
 9. задать имя таблицы БАЗЫ ДАННЫХ\n\
 0. выход в основное меню\n")
                 choiсe_file = input("     Ваш выбор: ")
+
                 if choiсe_file == "1":  #сохранить вакансии в базу данных
                     write = Saver(result_all, file_name)
                     write.createdb()
-
                 if choiсe_file == "2":  #Получает список всех вакансий с указанием названия компании, названия вакансии и зарплаты и ссылки на вакансию.
                     write = DBManager(file_name)
                     write.get_all_vacancies()
-
                 if choiсe_file == "3":   #Получает список всех компаний и количество вакансий у каждой компании.
                     write = DBManager(file_name)
                     write.get_companies_and_vacancies_count()
-
-                if choiсe_file == "4":
-                    pass
-                if choiсe_file == "5":    #получает среднюю зарплату по вакансиям.
-                    pass
-                if choiсe_file == "6":    #получает список всех вакансий, у которых зарплата выше средней по всем вакансиям
-                    pass
-                if choiсe_file == "7":    #Получает список всех вакансий, в названии которых содержатся переданные в метод слова, например “python”
-                    keyword = input ('Введите ключевое слово для поиска: ')
+                if choiсe_file == "4":    #Получает список всех вакансий, в названии которых содержатся переданные в метод слова, например “python”
+                    keyword = input('Введите ключевое слово для поиска: ')
                     write = DBManager(file_name)
                     write.get_vacancies_with_keyword(keyword)
-                if choiсe_file == "8":   # удалить таблицу
-                    pass
-
+                if choiсe_file == "5":    #получает среднюю зарплату по вакансиям.
+                    write = DBManager(file_name)
+                    write.get_avg_salary()
+                if choiсe_file == "6":    #получает список всех вакансий, у которых зарплата выше средней по всем вакансиям
+                    write = DBManager(file_name)
+                    write.get_vacancies_with_higher_salary()
+                if choiсe_file == "7":    # удалить таблицу
+                    write = DBManager(file_name)
+                    write.delete_table()
+                if choiсe_file == "8":   # удалить данные из таблицы
+                    write = DBManager(file_name)
+                    write.clear_table()
                 if choiсe_file == "9":  # задать имя таблицы
-                    file_name = input("Введите имя файла без расширения :")
-
+                    file_name = input("Введите имя таблицы :")
                 if choiсe_file == "0":   #выход в основное меню
                     break
+
         if choiсe == "3":
             while True:
                 print(f"\n{' ' * 8} МЕНЮ работы с файлом {file_name}.xlsx\n\
