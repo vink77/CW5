@@ -53,15 +53,15 @@ SELECT EXISTS (
    AND    c.relkind = 'r'    -- only tables
    );
 
-SELECT EXISTS(SELECT relname FROM pg_class where relname = '{self.filename_db}' and relkind='r');
+SELECT EXISTS(SELECT relname FROM pg_class where relname = my_name and relkind='r');
 
-# Среднее
-SELECT
-(SELECT ROUND(AVG(salary_from)) FROM
-my_name
-WHERE
-salary_from <> 0) as avg_salary_from,
-(SELECT ROUND(AVG(salary_to)) FROM
-my_name
-WHERE
-salary_to <> 0) as avg_salary_to
+# Получает среднюю зарплату по вакансиям
+SELECT ROUND (((SELECT AVG(salary_from) FROM my_name WHERE salary_from <> 0) +
+(SELECT AVG(salary_to) FROM my_name WHERE salary_to <> 0))/2)
+
+#Получает список вакансий с ЗП больше средней по всем вакансиям в таблице
+SELECT * FROM my_name
+WHERE salary_to > (SELECT ROUND (((SELECT AVG(salary_from) FROM my_name WHERE salary_from <> 0) +
+(SELECT AVG(salary_to) FROM my_name WHERE salary_to <> 0))/2))
+OR  salary_from > (SELECT ROUND (((SELECT AVG(salary_from) FROM my_name WHERE salary_from <> 0) +
+(SELECT AVG(salary_to) FROM my_name WHERE salary_to <> 0))/2));

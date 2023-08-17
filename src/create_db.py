@@ -42,7 +42,7 @@ class Saver:
                     for item in self.vacancies:
                         cur.execute(f"INSERT INTO {self.filename_db} VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
                                     [item["id"], item["name"], item["town"],item["firm_name"], item["url"], item["description"], item["salary_from"],item["salary_to"]])
-                    print('\nДанные сохранены в таблицу  {self.filename_db}\n')
+                    print(f'\nДанные сохранены в таблицу  {self.filename_db}\n')
         finally:
             self.conn.close()
 

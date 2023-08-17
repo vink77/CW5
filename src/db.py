@@ -22,14 +22,18 @@ class DBManager():
 
     def get_avg_salary(self):
         '''Получает среднюю зарплату по вакансиям.'''
-        command = f"SELECT FLOOR(AVG(ABS(salary_to - salary_from))) FROM {self.filename_db} WHERE (salary_to - salary_from)<>0;"
+        command = f"SELECT ROUND (((SELECT AVG(salary_from) FROM {self.filename_db} WHERE salary_from <> 0) +\
+                   (SELECT AVG(salary_to) FROM {self.filename_db} WHERE salary_to <> 0))/2) ;"
+        print("Средняя зарплата по вакансиям")
         DBManager.get_command(self, command)
 
     def get_vacancies_with_higher_salary(self):
         '''Получает список всех вакансий, у которых зарплата выше средней по всем вакансиям.'''
         command = f"SELECT * FROM {self.filename_db} \
-                    WHERE ABS(salary_to - salary_from)>(SELECT FLOOR(AVG(ABS(salary_to - salary_from))) AS avg_salary \
-                    FROM my_name WHERE (salary_to - salary_from)<>0);"
+                    WHERE salary_to > (SELECT ROUND (((SELECT AVG(salary_from) FROM {self.filename_db} WHERE salary_from <> 0) +\
+                   (SELECT AVG(salary_to) FROM {self.filename_db} WHERE salary_to <> 0))/2))\
+                    OR  salary_from > (SELECT ROUND (((SELECT AVG(salary_from) FROM {self.filename_db} WHERE salary_from <> 0) +\
+                   (SELECT AVG(salary_to) FROM {self.filename_db} WHERE salary_to <> 0))/2));"
         DBManager.get_command(self, command)
 
     def get_vacancies_with_keyword(self, keyword):
@@ -76,7 +80,7 @@ class DBManager():
                             print(str(row))
                         print(f'\nКоличество результатов - {len((rows))}\n')
                     else:
-                        print('Таблица еще не создана')
+                        print(f'Таблица {self.filename_db} еще не создана')
                     return rows
         finally:
             self.conn.close()
