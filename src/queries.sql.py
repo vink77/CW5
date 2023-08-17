@@ -22,11 +22,6 @@ FROM my_name
 GROUP BY city
 ORDER BY COUNT(city) DESC;
 
-#получает список всех вакансий, у которых зарплата выше средней по всем вакансиям
-SELECT * FROM my_name
-WHERE ABS(salary_to - salary_from)>(SELECT FLOOR(AVG(ABS(salary_to - salary_from))) AS avg_salary
-FROM my_name WHERE (salary_to - salary_from)<>0)
-
 #количество вакансий  по работодателям, отсортированный по кол-ву вакансий по убыванию
 SELECT company_name, COUNT(company_name) as count_company
 FROM my_name
@@ -65,3 +60,10 @@ WHERE salary_to > (SELECT ROUND (((SELECT AVG(salary_from) FROM my_name WHERE sa
 (SELECT AVG(salary_to) FROM my_name WHERE salary_to <> 0))/2))
 OR  salary_from > (SELECT ROUND (((SELECT AVG(salary_from) FROM my_name WHERE salary_from <> 0) +
 (SELECT AVG(salary_to) FROM my_name WHERE salary_to <> 0))/2));
+
+#Получает список имеющихся таблиц
+SELECT table_name FROM information_schema.tables
+WHERE table_schema = 'public'
+
+#Получает список всех вакансий, в названии которых содержатся переданные в метод слова, например “python”.
+SELECT * FROM my_name WHERE LOWER(appointment) LIKE '%python%'
