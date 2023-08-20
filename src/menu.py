@@ -25,7 +25,7 @@ class Job():
     """Класс взаимодействия с пользователем"""
     SALARY_FROM = 100000  # Константы зарплат для фильтров
     SALARY_TO = 150000  # Константы зарплат для фильтров
-    EMPLOYERS = [1235466,2748, 40565, 3529, 15478, 2180, 78638, 740, 3388, 3388, 23186, 3776, 6041, 4233, 115, 566, 2748, 1740]
+    EMPLOYERS = [1235466, 2748, 40565, 3529, 15478, 2180, 78638, 740, 3388, 3388, 23186, 3776, 6041, 4233, 115, 566, 2748, 1740]
     hh_api = HHApi()
     file_name = 'my_name'
     result_all = []
@@ -40,13 +40,6 @@ class Job():
         if choiсe == '1':
             result_all = []
             platforms = [HHApi()]
-            #search_query = input("Введите должность для поиска: ")
-            search_query = ''
-            city = 1
-            #while city not in ["1", "2", "3", "4"]:
-            #    city = str(
-            #        input("Выберите город поиска /1 - Москва, 2-Санкт-Петербург, 3- Кемерово, 4- Новосибирск/ : "))
-            #city = int(city)
             for item in platforms:
                 result = item.search(EMPLOYERS)
                 result_all.extend(result)

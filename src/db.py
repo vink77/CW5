@@ -38,7 +38,7 @@ class DBManager():
 
     def get_vacancies_with_keyword(self, keyword):
         '''Получает список всех вакансий, в названии которых содержатся переданные в метод слова, например “python”.'''
-        command = f"SELECT * FROM {self.filename_db} WHERE appointment LIKE '%{keyword}%';"
+        command = f"SELECT * FROM {self.filename_db} WHERE LOWER(appointment) LIKE '%{keyword}%';"
         DBManager.get_command(self, command)
 
     def delete_table(self):
