@@ -1,6 +1,8 @@
 import json
 import pandas as pd
 import psycopg2
+from src.database import password
+
 
 class Saver:
     """Класс для создания и заполнения таблиц."""
@@ -15,7 +17,7 @@ class Saver:
             host='localhost',
             database='HH_BASE',
             user='postgres',
-            password='9877'
+            password=password
         )
 
     def createdb(self) -> None:

@@ -1,14 +1,12 @@
 import psycopg2
-
+from src.database import password
 class DBManager():
     def __init__(self, filename='my_name'):
         self.filename_db = filename
-        self.conn = psycopg2.connect(
-            host='localhost',
+        self.conn = psycopg2.connect(host='localhost',
             database='HH_BASE',
             user='postgres',
-            password='9877'
-        )
+            password=password)
 
     def get_companies_and_vacancies_count(self):
         '''Получает список всех компаний и количество  вакансий у  каждой компании.'''
